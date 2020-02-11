@@ -30,7 +30,7 @@ shallow_clone: true
 clone_depth: 10
 
 cache:
-- %MSYS2_PATH%\var\cache\pacman
+- '%MSYS2_PATH%\var\cache\pacman'
 
 init:
 # Upgrade the MSYS2 system and all install packages
