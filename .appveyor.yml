@@ -1,0 +1,47 @@
+version: 1.0.{build}
+
+environment:
+  global:
+    APPVEYOR_OS_NAME: windows
+    CHERE_INVOKING: 1
+    MSYS2_PATH: c:\msys64
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  matrix:
+  #MSYS2 Building
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      platform: x86
+      MSYSTEM: MINGW32
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      platform: x64
+      MSYSTEM: MINGW64
+      
+  #VisualStudio Building
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      platform: x86
+      BUILDER : VS
+      BITS: 32
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      platform: x64
+      BUILDER : VS
+      BITS: 64
+
+configuration: Debug
+shallow_clone: true
+clone_depth: 10
+
+init:
+# Upgrade the MSYS2 system and all install packages
+- '%MSYS2_PATH%\usr\bin\pacman --noconfirm -Syu'
+
+install:
+# Install required packages for MSYS2 system
+- '%MSYS2_PATH%\usr\bin\pacman --needed -Syu ${MINGW_PACKAGE_PREFIX}-ninja ${MINGW_PACKAGE_PREFIX}-cmake ${MINGW_PACKAGE_PREFIX}-gtest ${MINGW_PACKAGE_PREFIX}-lcov'
+
+before_build:
+# Generate Cmake scripts
+- '%MSYS2_PATH%\usr\bin\bash -lc "scripts/ci/msys2/generate.sh"'
+
+build_script:
+# Build everything
+- '%MSYS2_PATH%\usr\bin\cmake --build build --target all'
+
