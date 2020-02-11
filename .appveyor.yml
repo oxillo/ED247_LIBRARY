@@ -29,13 +29,16 @@ configuration: Debug
 shallow_clone: true
 clone_depth: 10
 
+cache:
+- %MSYS2_PATH%\var\cache\pacman
+
 init:
 # Upgrade the MSYS2 system and all install packages
 - '%MSYS2_PATH%\usr\bin\pacman --noconfirm -Syu'
 
 install:
 # Install required packages for MSYS2 system
-- '%MSYS2_PATH%\usr\bin\pacman --needed -Syu ${MINGW_PACKAGE_PREFIX}-ninja ${MINGW_PACKAGE_PREFIX}-cmake ${MINGW_PACKAGE_PREFIX}-gtest ${MINGW_PACKAGE_PREFIX}-lcov'
+- '%MSYS2_PATH%\usr\bin\pacman --needed -Syu %MINGW_PACKAGE_PREFIX%-ninja %MINGW_PACKAGE_PREFIX%-cmake %MINGW_PACKAGE_PREFIX%-gtest %MINGW_PACKAGE_PREFIX%-lcov'
 
 before_build:
 # Generate Cmake scripts
