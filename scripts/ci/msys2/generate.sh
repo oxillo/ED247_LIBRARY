@@ -1,4 +1,5 @@
 mkdir build
+mkdir install
 cd build
 cmake .. -G"Ninja" \
     -DWORDSIZE=x64 \
@@ -8,5 +9,5 @@ cmake .. -G"Ninja" \
     -DLCOV_PATH=${MINGW_PREFIX} \
     -DLCOV_EXE=lcov.exe \
     -DGENHTML_EXE=genhtml.exe \
-    -DCMAKE_INSTALL_PREFIX= ../install
+    -DCMAKE_INSTALL_PREFIX= install
 cd ..

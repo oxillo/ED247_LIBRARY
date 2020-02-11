@@ -46,5 +46,5 @@ before_build:
 
 build_script:
 # Build everything
-- '%MSYS2_PATH%\usr\bin\cmake --build build --target all'
+- '%MSYS2_PATH%\usr\bin\bash -lc "cmake --build build --target all"'
 
