@@ -6,7 +6,7 @@ cd build
 #            cmake_variables+=(MINGW_PATH)
 #            "SET(WORDSIZE x64)"
 
-echo   > dependencies.cmake
+echo  "" > _dependencies.cmake
 
 cmake .. -G"Ninja" \
     -DWORDSIZE=x64 \
