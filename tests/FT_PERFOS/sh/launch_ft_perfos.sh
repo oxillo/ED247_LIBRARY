@@ -32,8 +32,8 @@ master=${test_name}_master
 slave=${test_name}_slave
 
 sh ${script_path}/prepare_ft_perfos.sh
-
-if [[ `uname -s` == "Linux" ]]; then
+OS=`uname -s`
+if [[ $OS == "Linux" || ${OS:0:5} == "MINGW" ]]; then
     export ED247_TEST_IP_ADDRESS=${SLAVE_IP_ADDRESS}
     ./$master > $master.log 2>&1&
     echo "## PID [$(pidof $master)] EUID [${EUID}]"

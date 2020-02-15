@@ -44,17 +44,26 @@ function error
 }
 
 wordsizes=("x86" "x64")
-if [[ `uname -s` == "Linux" ]]; then
+target=`uname -s`
+if [[ $target == "Linux" ]]; then
     target="linux"
+    compilers=("gcc4.8.5")
+elif [[ ${target:0:5} == "MINGW" ]]; then
+    target="mingw"
+    compilers=("gcc")
+else
+    target="windows"
+    compilers=("mingw4.9.2" "msvc2017" "msvc2015")
+fi
+
+if [[ $target == "linux" || ${target} == "mingw" ]]; then
     function convert2realpath {
         echo "$1"
     }
     function convert2cygpath {
         echo "$1"
     }
-    compilers=("gcc4.8.5")
 else
-    target="windows"
     function convert2realpath {
         cygpath -d "$1" 2>1 >/dev/null
         if [[ $? == 0 ]]; then
@@ -73,7 +82,6 @@ else
             error "${PRODUCT} cannot be compiled from an UNC path (e.g. \\\\filer\\${PRODUCT} or //filer/${PRODUCT}). You must mount it on a Windows drive, and use its local path to compile it."
             ;;
     esac
-    compilers=("mingw4.9.2" "msvc2017" "msvc2015")
 fi
 
 build_path="${script_path}/build"
@@ -156,7 +164,7 @@ function retrieve_compiler_and_wordsize
     echo "# Install directory : ${install_target}"
     tests_path="${install_target}/tests"
     test_env_filepath="${tests_path}/setup_test_env.sh"
-    if [[ ${_COMPILER} =~ ^msvc.* ]] || [[ ${_COMPILER} =~ ^mingw.* ]]; then
+    if [[ ${target} == "windows" ]]; then
         test_run_filename="run_test.bat"
         test_run_filepath="${tests_path}/${test_run_filename}"
         test_filename="test.sh"
@@ -219,9 +227,9 @@ function cmd_build
     mkdir -p ${install_target}
 
     # Setup dependencies if needed
-    generate_dependencies_files "${_DEP}"
-
-    if [[ ${target} == "linux" ]]; then
+    #generate_dependencies_files "${_DEP}"
+    
+    if [[ ${target} == "linux" || ${target} == "mingw" ]]; then
         source_generated_env
 
         # Build
@@ -418,7 +426,7 @@ function generate_dependencies_files
         error "Cannot find dependencies file: ${dep_file}"
     fi
 
-    if [[ ${target} == "linux" ]]; then
+    if [[ ${target} == "linux" || ${target} == "mingw" ]]; then
         generated_env=${build_target}/_dependencies.sh
     else
         generated_env=${build_target}/_dependencies.bat
@@ -489,7 +497,7 @@ function generate_dependencies_files
             generated_ldpath+=("$(convert2cygpath ${LIBXML2_PATH})/bin" "$(convert2cygpath ${LIBXML2_PATH})/lib")
         fi
 
-        if [[ ${target} == "linux" ]]; then
+        if [[ ${target} == "linux" || ${target} == "mingw" ]]; then
             write_path=$(printf "%s:" "${generated_path[@]}")
             write_ldpath=$(printf "%s:" "${generated_ldpath[@]}")
             cat <<END >${generated_env}
@@ -572,7 +580,7 @@ cmdhelp_tests="# Tests
 
 function cmd_tests {
 
-    _LCOV=1
+    #_LCOV=1
 
     # shift $((OPTIND-1))
 
@@ -893,6 +901,9 @@ END
     
     # Setup dependencies paths and executables
     echo "# Setup dependencies"
+    if [[ $target == "mingw" ]]; then
+        pacman --needed -Syu ${MINGW_PACKAGE_PREFIX}-ninja ${MINGW_PACKAGE_PREFIX}-cmake ${MINGW_PACKAGE_PREFIX}-gtest ${MINGW_PACKAGE_PREFIX}-lcov
+    else
     (
         . ${dep_file} &&
 
@@ -907,6 +918,7 @@ END
         setup_copy GTEST
         setup_copy LIBXML2
     )
+    fi
 
 }
 

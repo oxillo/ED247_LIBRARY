@@ -30,8 +30,8 @@ test_name_tester=${test_name}_tester
 cmd=${test_name##launch_}
 cmd_tester=${test_name_tester##launch_}
 
-
-if [[ `uname -s` == "Linux" ]]; then
+OS=`uname -s`
+if [[ $OS == "Linux" || ${OS:0:5} == "MINGW" ]]; then
     ./$cmd > $cmd.log 2>&1&
     ./$cmd_tester > $cmd_tester.log 2>&1
 else
