@@ -84,7 +84,7 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/src/cmake")
 # LIBXML2
 MESSAGE("Checking for LibXml2 ...")
 FIND_PACKAGE(LIBXML2 REQUIRED GLOBAL
-            PATHS ${LIBXML2_PATH})
+            PATHS ${LIBXML2_PATH} ${CMAKE_PREFIX_PATH}/libxml2)
 
 # xmllint.exe not detected as part of libXML2 package; try to detect it differently
 IF( LIBXML2_XMLLINT_EXECUTABLE )
