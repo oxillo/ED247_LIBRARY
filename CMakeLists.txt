@@ -23,22 +23,22 @@
 ###############################################################################
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
-PROJECT(ED247_LIBRARY)
+cmake_policy(SET CMP0048 NEW) #Use VERSION data from PROJECT() 
+
+PROJECT(ED247_LIBRARY VERSION 1.0.0) 
 
 # Hardcoded options
 SET(FT_PERFOS_MASTER_WITH_GPROF FALSE) # Enable compilation of FT_PERFOS_MASTER with GPROF compatible options
 SET(LIBED247_VERBOSE_DEBUG FALSE) # Enable verbose debug logging
 
-# Import dependencies (cots and components)
-if(EXISTS "${CMAKE_SOURCE_DIR}/${VISUAL_GENERATED_CMAKE}" AND NOT IS_DIRECTORY "${CMAKE_SOURCE_DIR}/${VISUAL_GENERATED_CMAKE}")
-    SET(GENERATED_DEPENDENCIES "${CMAKE_SOURCE_DIR}/${VISUAL_GENERATED_CMAKE}")
-else()
-    SET(GENERATED_DEPENDENCIES "${CMAKE_CURRENT_BINARY_DIR}/_dependencies.cmake")
-endif()
-if(NOT EXISTS "${GENERATED_DEPENDENCIES}")
-    MESSAGE(FATAL_ERROR "The generated cmake dependency file cannot be found: ${GENERATED_DEPENDENCIES}")
-endif()
-INCLUDE(${GENERATED_DEPENDENCIES})
+
+# User configuration
+OPTION(ENABLE_LCOV "Generate LCOV report" OFF)
+
+SET( LIBXML2_PATH "" CACHE PATH "LIBXML2 root path" )
+SET( GTEST_PATH "" CACHE PATH "GTest root path" )
+SET( LCOV_PATH "" CACHE PATH "Lcov root path" )
+SET( DOXYGEN_PATH "" CACHE PATH "Doxygen root path" )
 
 # Print some useful information to screen
 STRING(TIMESTAMP CMAKE_CONFIGURE_DATE UTC)
@@ -54,37 +54,76 @@ MESSAGE("# Date        [${CMAKE_CONFIGURE_DATE}]")
 MESSAGE("##############")
 
 # Deal with exe dependencies
-SET(XMLLINT_PROGRAM          ${LIBXML2_PATH}/bin/${XMLLINT_EXE})
-if(NOT EXISTS "${XMLLINT_PROGRAM}")
-    MESSAGE(FATAL_ERROR "Xmllint not found: ${XMLLINT_PROGRAM}")
-endif()
-SET(LCOV_PROGRAM             ${LCOV_PATH}/bin/${LCOV_EXE})
-if((${ENABLE_LCOV}) AND (NOT EXISTS "${LCOV_PROGRAM}"))
-    MESSAGE(FATAL_ERROR "Lcov not found: ${LCOV_PROGRAM}")
-endif()
-SET(GENHTML_PROGRAM          ${LCOV_PATH}/bin/${GENHTML_EXE})
-if((${ENABLE_LCOV}) AND (NOT EXISTS "${GENHTML_PROGRAM}"))
-    MESSAGE(FATAL_ERROR "Lcov genhtml not found: ${GENHTML_PROGRAM}")
-endif()
+FIND_PROGRAM(XMLLINT_PROGRAM NAMES xmllint xmllint.exe 
+             HINTS ${LIBXML2_PATH}/bin)
+MESSAGE("# xmllint     ${XMLLINT_PROGRAM}")
+
+IF( ${ENABLE_LCOV} )
+    FIND_PROGRAM(LCOV_PROGRAM NAMES lcov lcov.exe 
+             HINTS ${LCOV_PATH}/bin )
+    MESSAGE("# lcov        ${LCOV_PROGRAM}")
+    
+    FIND_PROGRAM(GENHTML_PROGRAM NAMES genhtml genhtml.exe 
+             HINTS ${LCOV_PATH}/bin )
+    MESSAGE("# genhtml     ${GENHTML_PROGRAM}")
+ENDIF(${ENABLE_LCOV})
+MESSAGE("##############")
+
+# Fail configuration if all exe were not found
+IF( NOT( XMLLINT_PROGRAM ) OR 
+    ( ENABLE_LCOV AND NOT (LCOV_PROGRAM AND GENHTML_PROGRAM) )   )
+    MESSAGE(FATAL_ERROR "Some required executables were not found - see above for details")
+ENDIF() 
+
+
+
 
 # Deal with libraries dependencies
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/src/cmake")
 
 # LIBXML2
-IF(WIN32)
-    FIND_PACKAGE(LibXml2 REQUIRED GLOBAL)
-    SET(LIBXML2_INCLUDE_DIRS ${LIBXML2_INCLUDE_DIR})
-ELSE(WIN32)
-    FIND_PACKAGE(LibXml2 REQUIRED GLOBAL HINTS ${LIBXML2_PATH}/lib/cmake)
-ENDIF(WIN32)
+MESSAGE("Checking for LibXml2 ...")
+FIND_PACKAGE(LIBXML2 REQUIRED GLOBAL
+            PATHS ${LIBXML2_PATH})
 
-INCLUDE(GoogleTest)
-SET(CMAKE_SIZEOF_VOID_P_MEM ${CMAKE_SIZEOF_VOID_P})
-IF(${WORDSIZE} MATCHES "x86")
-	SET(CMAKE_SIZEOF_VOID_P "4")
-ENDIF(${WORDSIZE} MATCHES "x86")
-FIND_PACKAGE(GTest REQUIRED GLOBAL HINTS ${GTEST_PATH}/lib64/cmake ${GTEST_PATH}/lib/cmake)
-SET(CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P_MEM})
+# xmllint.exe not detected as part of libXML2 package; try to detect it differently
+IF( LIBXML2_XMLLINT_EXECUTABLE )
+    SET(XMLLINT_PROGRAM ${LIBXML2_XMLLINT_EXECUTABLE})
+ELSE()
+    FIND_PROGRAM(XMLLINT_PROGRAM NAMES xmllint xmllint.exe 
+             HINTS ${LIBXML2_PATH}/bin)
+ENDIF()
+
+get_cmake_property(_variableNames VARIABLES)
+list (SORT _variableNames)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
+
+# GTest
+FIND_PACKAGE(GTest REQUIRED GLOBAL 
+            PATHS ${GTEST_PATH})
+
+
+#FIND_PACKAGE(pkgconfig REQUIRED)
+#MESSAGE("Checking for GTest ...")
+#pkg_check_modules (PC_GTEST REQUIRED gtest_main)
+#pkg_check_modules (PC_GMOCK REQUIRED gmock_main)
+#IF(PC_GTEST_FOUND AND PC_GMOCK_FOUND)
+#    MESSAGE("## Using googleTest from pkg-config")
+#    SET(GTEST_LIBRARIES ${PC_GMOCK_LIBRARIES})
+#    SET(GTEST_INCLUDE_DIRS ${PC_GMOCK_INCLUDE_DIRS})
+#ELSE()
+#    INCLUDE(GoogleTest)
+#    SET(CMAKE_SIZEOF_VOID_P_MEM ${CMAKE_SIZEOF_VOID_P})
+#    IF(${WORDSIZE} MATCHES "x86")
+#        SET(CMAKE_SIZEOF_VOID_P "4")
+#    ENDIF(${WORDSIZE} MATCHES "x86")
+#    
+#    SET(CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P_MEM})
+#    SET(GTEST_LIBRARIES GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
+#ENDIF()
+
 
 # Compilation flags and options
 IF(COMPILER MATCHES "^msvc.*")
