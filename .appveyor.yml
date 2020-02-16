@@ -47,7 +47,7 @@ install:
 - cmd: pip.exe install conan
 - cmd: conan user # Create the conan data directory
 - cmd: conan --version
-- cmd: conan install libxml2/2.9.9 
+- cmd: conan install .
 
 
 
