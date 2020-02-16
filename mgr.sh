@@ -116,10 +116,12 @@ function print_cmd_list
 # Setup environment
 function source_generated_env
 {
-    if [[ ! -e "${generated_env}" ]]; then
-        error "Cannot find generated environment file. Please run 'build' target first."
+    if [[ ${target} == "linux" ]]; then
+        if [[ ! -e "${generated_env}" ]]; then
+            error "Cannot find generated environment file. Please run 'build' target first."
+        fi
+        . ${generated_env}
     fi
-    . ${generated_env}
 }
 
 function retrieve_compiler_and_wordsize
