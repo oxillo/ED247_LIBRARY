@@ -64,7 +64,8 @@ if [[ $target == "linux" || ${target} == "mingw" ]]; then
         echo "$1"
     }
 else
-    function convert2realpath {
+    echo "Windows was found"
+    function convert2realpath_old {
         cygpath -d "$1" 2>1 >/dev/null
         if [[ $? == 0 ]]; then
             tmp=$(cygpath -d "$1")
@@ -72,6 +73,9 @@ else
         else
             echo "$(cygpath -w $1)"
         fi
+    }
+    function convert2realpath {
+        echo "$(cygpath -w $1)"
     }
 
     function convert2cygpath {
@@ -344,13 +348,13 @@ rem call %MSVC_EXE% %MSVC_ARG%
 
 rem pushd %~dp0
 
-cmake "${script_path}" -G"Ninja" -DENABLE_DOC=${_DOX} -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=${install_target}
+cmake "$(convert2realpath ${script_path})" -G"Ninja" -DENABLE_DOC=${_DOX} -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=$(convert2realpath ${install_target})
 if %errorlevel% NEQ 0 (
     echo "Cmake cannot configure the project"
     exit /b 1
 )
 
-cmake --build ${build_target} --target all
+cmake --build $(convert2realpath ${build_target}) --target all
 if %errorlevel% NEQ 0 (
     echo "Cmake cannot build the project"
     exit /b 1
@@ -364,7 +368,7 @@ if "${_DOX}" == "1" (
     )
 )
 
-cmake --build ${build_target} --target install
+cmake --build $(convert2realpath ${build_target}) --target install
 if %errorlevel% NEQ 0 (
     echo "Cmake cannot install the project"
     exit /b 1
