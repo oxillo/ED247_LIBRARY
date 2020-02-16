@@ -6,6 +6,10 @@ environment:
     CHERE_INVOKING: 1
     MSYS2_PATH: c:\msys64
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    PYTHON: "C:\\Python36-x64"
+    #PYTHON_VERSION: "3.6.3"
+    #PYTHON_ARCH: "64"
+   # PIP: "C:\\Python36-x64\\Scripts\\pip"
   matrix:
   #MSYS2 Building
     #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
@@ -57,6 +61,7 @@ before_build:
 
 build_script:
 # Build everything
+- cmd: dir libxml2\2.9.9
 - '%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}"'
 
 test_script:
