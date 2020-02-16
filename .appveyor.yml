@@ -9,21 +9,24 @@ environment:
   matrix:
   #MSYS2 Building
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      platform: x86
       MSYSTEM: MINGW32
+      WORDSIZE: x86
+      COMPILER: gcc
+      BUILDTYPE: msys2
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      platform: x64
+      WORDSIZE: x64
       MSYSTEM: MINGW64
-      
+      COMPILER: gcc
+      BUILDTYPE: msys2
   #VisualStudio Building
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      platform: x86
-      BUILDER : VS
-      BITS: 32
+      WORDSIZE: x86
+      COMPILER : msvc2017
+      BUILDTYPE: msvc
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      platform: x64
-      BUILDER : VS
-      BITS: 64
+      WORDSIZE: x64
+      COMPILER : msvc2017
+      BUILDTYPE: msvc
 
 configuration: Debug
 shallow_clone: true
@@ -38,7 +41,7 @@ init:
 
 install:
 # Install required packages for MSYS2 system
-- '%MSYS2_PATH%\usr\bin\bash -lc "scripts/ci/msys2/install.sh"'
+- '%MSYS2_PATH%\usr\bin\bash -lc "scripts/ci/${BUILDTYPE}/install.sh"'
 
 before_build:
 # Generate Cmake scripts
