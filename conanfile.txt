@@ -2,4 +2,6 @@
 libxml2/2.9.9
 
 [generators]
-cmake
+cmake_find_package
+
+#use of cmake-find_package inspired from https://blog.conan.io/2018/06/11/Transparent-CMake-Integration.html

@@ -61,7 +61,8 @@ before_build:
 
 build_script:
 # Build everything
-- cmd: dir 
+- cmd: mkdir build && pushd build && conan install .. && popd
+- cmd : dir
 - '%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}"'
 
 test_script:

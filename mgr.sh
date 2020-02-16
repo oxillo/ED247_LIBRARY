@@ -323,34 +323,34 @@ END
 
 @echo off
 
-call $(convert2realpath ${generated_env})
+rem call $(convert2realpath ${generated_env})
 
-pushd %NINJA_PATH%
+rem pushd %NINJA_PATH%
 
-echo Change to %cd%
-set NINJA_NEWPATH=%cd%
-set PATH=%NINJA_NEWPATH%;%PATH%
+rem echo Change to %cd%
+rem set NINJA_NEWPATH=%cd%
+rem set PATH=%NINJA_NEWPATH%;%PATH%
 
-pushd %DOXYGEN_PATH%
+rem pushd %DOXYGEN_PATH%
 
-echo Change to %cd%
-set DOXYGEN_NEWPATH=%cd%
-set PATH=%DOXYGEN_NEWPATH%;%PATH%
+rem echo Change to %cd%
+rem set DOXYGEN_NEWPATH=%cd%
+rem set PATH=%DOXYGEN_NEWPATH%;%PATH%
 
-pushd %MSVC_PATH%
+rem pushd %MSVC_PATH%
 
-echo Change to %cd%
-call %MSVC_EXE% %MSVC_ARG%
+rem echo Change to %cd%
+rem call %MSVC_EXE% %MSVC_ARG%
 
-pushd %~dp0
+rem pushd %~dp0
 
-cmake $(convert2realpath "${script_path}") -G"Ninja" -DENABLE_DOC=${_DOX} -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=$(convert2realpath ${install_target})
+cmake "${script_path}" -G"Ninja" -DENABLE_DOC=${_DOX} -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX=${install_target}
 if %errorlevel% NEQ 0 (
     echo "Cmake cannot configure the project"
     exit /b 1
 )
 
-cmake --build $(convert2realpath ${build_target}) --target all
+cmake --build ${build_target} --target all
 if %errorlevel% NEQ 0 (
     echo "Cmake cannot build the project"
     exit /b 1
@@ -364,7 +364,7 @@ if "${_DOX}" == "1" (
     )
 )
 
-cmake --build $(convert2realpath ${build_target}) --target install
+cmake --build ${build_target} --target install
 if %errorlevel% NEQ 0 (
     echo "Cmake cannot install the project"
     exit /b 1
@@ -378,7 +378,7 @@ popd
 
 echo "# DONE"
 END
-        cmd "/C $(convert2realpath ${generated_cmd})"
+        cmd "/C ${generated_cmd}"
     fi
 }
 
