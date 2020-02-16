@@ -94,11 +94,11 @@ ELSE()
              HINTS ${LIBXML2_PATH}/bin)
 ENDIF()
 
-get_cmake_property(_variableNames VARIABLES)
-list (SORT _variableNames)
-foreach (_variableName ${_variableNames})
-    message(STATUS "${_variableName}=${${_variableName}}")
-endforeach()
+#get_cmake_property(_variableNames VARIABLES)
+#list (SORT _variableNames)
+#foreach (_variableName ${_variableNames})
+#    message(STATUS "${_variableName}=${${_variableName}}")
+#endforeach()
 
 # GTest
 FIND_PACKAGE(GTest REQUIRED GLOBAL 

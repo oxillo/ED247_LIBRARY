@@ -8,16 +8,16 @@ environment:
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
   matrix:
   #MSYS2 Building
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      MSYSTEM: MINGW32
-      WORDSIZE: x86
-      COMPILER: gcc
-      BUILDTYPE: msys2
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      WORDSIZE: x64
-      MSYSTEM: MINGW64
-      COMPILER: gcc
-      BUILDTYPE: msys2
+    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #  MSYSTEM: MINGW32
+    #  WORDSIZE: x86
+    #  COMPILER: gcc
+    #  BUILDTYPE: msys2
+    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #  WORDSIZE: x64
+    #  MSYSTEM: MINGW64
+    #  COMPILER: gcc
+    #  BUILDTYPE: msys2
   #VisualStudio Building
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       WORDSIZE: x86
