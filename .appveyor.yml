@@ -61,8 +61,9 @@ before_build:
 
 build_script:
 # Build everything
-- cmd: mkdir build && pushd build && conan install .. && popd
+- cmd: mkdir build && pushd build && conan install .. && type FindLibXml2.cmake & popd
 - cmd : dir
+- cmd : dir c:\tools
 - '%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}"'
 
 test_script:

@@ -24,6 +24,8 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 cmake_policy(SET CMP0048 NEW) #Use VERSION data from PROJECT() 
+set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+message(${CMAKE_BINARY_DIR})
 
 PROJECT(ED247_LIBRARY VERSION 1.0.0) 
 
@@ -34,6 +36,8 @@ SET(LIBED247_VERBOSE_DEBUG FALSE) # Enable verbose debug logging
 
 # User configuration
 OPTION(ENABLE_LCOV "Generate LCOV report" OFF)
+
+
 
 SET( LIBXML2_PATH "" CACHE PATH "LIBXML2 root path" )
 SET( GTEST_PATH "" CACHE PATH "GTest root path" )
