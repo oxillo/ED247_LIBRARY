@@ -66,13 +66,13 @@ build_script:
     pushd build &&
     conan install .. &&
     set &&
-    where ninja
+    where ninja;
 
-    where cmake
+    where cmake;
 
-    where nmake
+    where nmake;
 
-    cmake .. -G "Ninja"
+    cmake .. -G "Ninja";
 
     popd
   )
