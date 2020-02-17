@@ -47,12 +47,12 @@ install:
 # Install required packages for MSYS2 system
 - '%MSYS2_PATH%\usr\bin\bash -lc "scripts/ci/${BUILDTYPE}/install.sh"'
 - cmd: choco install ninja
+- cmd: choco install cmake
+- cmd: set PATH=C:\ProgramData\chocolatey\lib\ninja\tools;%PATH%
 - cmd: set PATH=%PATH%;C:\Python36-x64\Scripts
 - cmd: C:\Python36-x64\Scripts\pip.exe install conan
 - cmd: conan user # Create the conan data directory
 - cmd: conan --version
-
-
 
 before_build:
 # Generate Cmake scripts
@@ -63,14 +63,14 @@ build_script:
 - if "%BUILDTYPE%"=="msys2" (%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}")
 - echo "test"
 - if "%BUILDTYPE%"=="msvc"  (
-    mkdir build
-    pushd build
-    conan install ..
-    where ninja
-    where cmake
-    where nmake
-    set
-    cmake .. -G "Ninja"
+    mkdir build &&
+    pushd build &&
+    conan install .. &&
+    where ninja &&
+    where cmake &&
+    where nmake &&
+    set &&
+    cmake .. -G "Ninja" &&
     popd
   )
 
