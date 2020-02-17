@@ -60,14 +60,18 @@ before_build:
 
 build_script:
 # Build everything
-- if "%BUILDTYPE%"=="msys2" (%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}")
-- if "%BUILDTYPE%"=="msvc"  (
+- cmd: if "%BUILDTYPE%"=="msys2" (%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}")
+- cmd:>-
+  if "%BUILDTYPE%"=="msvc"  (
     mkdir build
     pushd build
     conan install ..
+    where ninja
+    where nmake
+    set
     cmake .. -G "Ninja"
     popd
-)
+  )
 
 test_script:
   - '%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh tests ${COMPILER} ${WORDSIZE}"'
