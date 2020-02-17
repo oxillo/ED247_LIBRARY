@@ -61,15 +61,7 @@ build_script:
 - if "%BUILDTYPE%"=="msys2" (%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}")
 - echo "test"
 - if "%BUILDTYPE%"=="msvc"  (
-    mkdir build &&
-    pushd build ||
-    conan install .. ||
-    set ||
-    where ninja ||
-    where cmake ||
-    where nmake ||
-    cmake .. -G "Ninja" ||
-    popd
+    scripts\ci\msvc\build.bat
   )
 
 test_script:
