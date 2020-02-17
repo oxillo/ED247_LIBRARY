@@ -51,7 +51,6 @@ install:
 - cmd: C:\Python36-x64\Scripts\pip.exe install conan
 - cmd: conan user # Create the conan data directory
 - cmd: conan --version
-- cmd: conan install .
 
 
 
@@ -61,10 +60,14 @@ before_build:
 
 build_script:
 # Build everything
-- cmd: mkdir build && pushd build && conan install .. && type FindLibXml2.cmake & popd
-- cmd : dir
-- cmd : dir c:\tools
-- '%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}"'
+- if "%BUILDTYPE%"=="msys2" (%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}")
+- if "%BUILDTYPE%"=="msvc"  (
+    mkdir build
+    pushd build
+    conan install ..
+    cmake .. -G "Ninja"
+    popd
+)
 
 test_script:
   - '%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh tests ${COMPILER} ${WORDSIZE}"'
