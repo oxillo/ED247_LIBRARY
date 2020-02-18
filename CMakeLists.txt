@@ -57,6 +57,19 @@ MESSAGE("# Version     [${ED247_LIBRARY_VERSION}]")
 MESSAGE("# Date        [${CMAKE_CONFIGURE_DATE}]")
 MESSAGE("##############")
 
+# LIBXML2
+MESSAGE("Checking for LibXml2 ...")
+FIND_PACKAGE(LIBXML2 REQUIRED GLOBAL
+            PATHS ${LIBXML2_PATH})
+
+# xmllint.exe not detected as part of libXML2 package; try to detect it differently
+IF( LIBXML2_XMLLINT_EXECUTABLE )
+    SET(XMLLINT_PROGRAM ${LIBXML2_XMLLINT_EXECUTABLE})
+ELSE()
+    FIND_PROGRAM(XMLLINT_PROGRAM NAMES xmllint xmllint.exe 
+             HINTS ${LIBXML2_PATH}/bin)
+ENDIF()
+
 # Deal with exe dependencies
 FIND_PROGRAM(XMLLINT_PROGRAM NAMES xmllint xmllint.exe 
              HINTS ${LIBXML2_PATH}/bin)
@@ -85,18 +98,6 @@ ENDIF()
 # Deal with libraries dependencies
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/src/cmake")
 
-# LIBXML2
-MESSAGE("Checking for LibXml2 ...")
-FIND_PACKAGE(LIBXML2 REQUIRED GLOBAL
-            PATHS ${LIBXML2_PATH})
-
-# xmllint.exe not detected as part of libXML2 package; try to detect it differently
-IF( LIBXML2_XMLLINT_EXECUTABLE )
-    SET(XMLLINT_PROGRAM ${LIBXML2_XMLLINT_EXECUTABLE})
-ELSE()
-    FIND_PROGRAM(XMLLINT_PROGRAM NAMES xmllint xmllint.exe 
-             HINTS ${LIBXML2_PATH}/bin)
-ENDIF()
 
 #get_cmake_property(_variableNames VARIABLES)
 #list (SORT _variableNames)
