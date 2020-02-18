@@ -61,7 +61,7 @@ build_script:
 - if "%BUILDTYPE%"=="msys2" (%MSYS2_PATH%\usr\bin\bash -lc "./mgr.sh build ${COMPILER} ${WORDSIZE}")
 - echo "test"
 - if "%BUILDTYPE%"=="msvc"  (
-    scripts\ci\msvc\build.bat ${COMPILER} ${WORDSIZE}
+    scripts\ci\msvc\build.bat %COMPILER% %WORDISZE%
   )
 
 test_script:

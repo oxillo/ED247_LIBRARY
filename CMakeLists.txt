@@ -60,7 +60,7 @@ MESSAGE("##############")
 # LIBXML2
 MESSAGE("Checking for LibXml2 ...")
 FIND_PACKAGE(LIBXML2 REQUIRED GLOBAL
-            PATHS ${LIBXML2_PATH})
+            PATHS ${LIBXML2_PATH} ${CMAKE_BINARY_DIR})
 
 # xmllint.exe not detected as part of libXML2 package; try to detect it differently
 IF( LIBXML2_XMLLINT_EXECUTABLE )
