@@ -1,5 +1,6 @@
 [requires]
 libxml2/2.9.9
+gtest/1.10.0
 
 [generators]
 cmake_find_package
