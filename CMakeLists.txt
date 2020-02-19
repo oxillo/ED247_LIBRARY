@@ -99,15 +99,38 @@ ENDIF()
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/src/cmake")
 
 
-#get_cmake_property(_variableNames VARIABLES)
-#list (SORT _variableNames)
-#foreach (_variableName ${_variableNames})
-#    message(STATUS "${_variableName}=${${_variableName}}")
-#endforeach()
-
 # GTest
 FIND_PACKAGE(GTest REQUIRED GLOBAL)
 #            PATHS ${GTEST_PATH})
+if(GTest_FOUND AND NOT TARGET GTest::gtest)
+    add_library(GTest::gtest INTERFACE IMPORTED)
+    set_target_properties(GTest::gtest PROPERTIES
+        INTERFACE_LINK_LIBRARIES "gtest"
+    )
+    add_library(GTest::gtest_main INTERFACE IMPORTED)
+    set_target_properties(GTest::gtest_main PROPERTIES
+        INTERFACE_LINK_LIBRARIES "gtest_main"
+    )
+    add_library(GTest::gmock INTERFACE IMPORTED)
+    set_target_properties(GTest::gmock PROPERTIES
+        INTERFACE_LINK_LIBRARIES "gmock"
+    )
+    add_library(GTest::gmock_main INTERFACE IMPORTED)
+    set_target_properties(GTest::gmock_main PROPERTIES
+        INTERFACE_LINK_LIBRARIES "gmock_main"
+    )
+endif()
+
+
+
+#[==[
+get_cmake_property(_variableNames VARIABLES)
+list (SORT _variableNames)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
+#]==]
+
 
 
 #FIND_PACKAGE(pkgconfig REQUIRED)
