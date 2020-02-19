@@ -47,7 +47,7 @@ TARGET_COMPILE_DEFINITIONS(ed247_static PUBLIC "LIBED247_NAME=\"${CMAKE_PROJECT_
 
 # LIBXML2 (static)
 FIND_PACKAGE(LibXml2 REQUIRED)
-#[==[
+##[==[
 get_cmake_property(_variableNames VARIABLES)
 list (SORT _variableNames)
 foreach (_variableName ${_variableNames})
