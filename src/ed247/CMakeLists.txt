@@ -57,9 +57,9 @@ endforeach()
 if(LibXml2_FOUND AND NOT TARGET LibXml2::libxml2)
     add_library(LibXml2::libxml2 INTERFACE IMPORTED)
     set_target_properties(LibXml2::libxml2 PROPERTIES
-        INTERFACE_LINK_LIBRARIES ${LIBXML2_LIBRARIES}
+        INTERFACE_LINK_LIBRARIES ${LibXml2_LIBRARIES}
     )
-    target_include_directories(LibXml2::libxml2 INTERFACE ${LIBXML2_INCLUDE_DIRS}
+    target_include_directories(LibXml2::libxml2 INTERFACE ${LibXml2_INCLUDE_DIRS}
     )
 endif()
 
