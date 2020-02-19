@@ -22,6 +22,29 @@
 # DEALINGS IN THE SOFTWARE.                                                   #
 ###############################################################################
 
+# GTest will be used for 
+FIND_PACKAGE(GTest REQUIRED)
+if(GTest_FOUND AND NOT TARGET GTest::gtest)
+    add_library(GTest::gtest INTERFACE IMPORTED)
+    set_target_properties(GTest::gtest PROPERTIES
+        INTERFACE_LINK_LIBRARIES "gtest"
+    )
+    add_library(GTest::gtest_main INTERFACE IMPORTED)
+    set_target_properties(GTest::gtest_main PROPERTIES
+        INTERFACE_LINK_LIBRARIES "gtest_main"
+    )
+    add_library(GTest::gmock INTERFACE IMPORTED)
+    set_target_properties(GTest::gmock PROPERTIES
+        INTERFACE_LINK_LIBRARIES "gmock"
+    )
+    add_library(GTest::gmock_main INTERFACE IMPORTED)
+    set_target_properties(GTest::gmock_main PROPERTIES
+        INTERFACE_LINK_LIBRARIES "gmock_main"
+    )
+endif()
+
+SET( GTEST_PATH "" CACHE PATH "GTest root path" )
+
 # This first set of applications uses only the original library
 # They consist in simple examples without test assesments
 ADD_SUBDIRECTORY(EXAMPLE_1)
