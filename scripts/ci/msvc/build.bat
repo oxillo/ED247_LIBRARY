@@ -4,7 +4,7 @@ conan install ..
 
 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %WORDSIZE%
 
-cmake .. -G "Ninja"
+cmake .. -G "Ninja" -DCOMPILER=%COMPILER% -DWORDSIZE=%WORDSIZE%
 if %errorlevel% NEQ 0 (
     echo "Cmake cannot configure the project"
     exit /b 1
