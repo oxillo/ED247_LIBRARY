@@ -47,6 +47,13 @@ TARGET_COMPILE_DEFINITIONS(ed247_static PUBLIC "LIBED247_NAME=\"${CMAKE_PROJECT_
 
 # LIBXML2 (static)
 FIND_PACKAGE(LibXml2 REQUIRED)
+#[==[
+get_cmake_property(_variableNames VARIABLES)
+list (SORT _variableNames)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
+#]==]
 if(LibXml2_FOUND AND NOT TARGET LibXml2::libxml2)
     add_library(LibXml2::libxml2 INTERFACE IMPORTED)
     set_target_properties(LibXml2::libxml2 PROPERTIES
