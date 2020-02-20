@@ -22,6 +22,16 @@
 # DEALINGS IN THE SOFTWARE.                                                   #
 ###############################################################################
 
+FIND_PACKAGE(LIBXML2 REQUIRED)
+if(LIBXML2_FOUND AND NOT TARGET LIBXML2::libxml2)
+    add_library(LIBXML2::libxml2 INTERFACE IMPORTED)
+    target_link_libraries(LIBXML2::libxml2 INTERFACE ${LIBXML2_LIBRARIES}
+    )
+    target_include_directories(LIBXML2::libxml2 INTERFACE ${LIBXML2_INCLUDE_DIRS}
+    )
+endif()
+
+
 # Create a library that will be used for test purposes only
 
 FILE(GLOB_RECURSE SRCLIBFILES LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/../../src/ed247/*.cpp)
@@ -45,6 +55,5 @@ ENDIF()
 TARGET_LINK_LIBRARIES(ed247_test memhooks)
 TARGET_INCLUDE_DIRECTORIES(ed247_test PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../src/memhooks)
 
-TARGET_LINK_LIBRARIES(ed247_test ${LIBXML2_LIBRARIES})
-TARGET_INCLUDE_DIRECTORIES(ed247_test PUBLIC ${LIBXML2_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
+TARGET_LINK_LIBRARIES(ed247_test LIBXML2::libxml2)
 
