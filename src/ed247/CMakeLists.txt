@@ -58,7 +58,7 @@ if(LIBXML2_FOUND AND NOT TARGET LIBXML2::libxml2)
     add_library(LIBXML2::libxml2 INTERFACE IMPORTED)
     target_link_libraries(LIBXML2::libxml2 INTERFACE ${LIBXML2_LIBRARIES}
     )
-    target_include_directories(LIBXML2::libxml2 INTERFACE ${LIBXML2_INCLUDE_DIRS}
+    target_include_directories(LIBXML2::libxml2 INTERFACE ${LIBXML2_INCLUDE_DIRS} ${LibXml2_INCLUDE_DIRS}
     )
 endif()
 
